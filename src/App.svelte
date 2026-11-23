@@ -5,7 +5,7 @@
   import PlayerHand from './lib/components/PlayerHand.svelte';
   import RulesModal from './lib/components/RulesModal.svelte';
   import { computeRevealedMemory } from './lib/game/csp.js';
-  import { getDifficulty } from './lib/game/difficulties.js';
+  import { DIFFICULTIES, getDifficulty } from './lib/game/difficulties.js';
   import { CspTriplettesPlayer } from './lib/game/players.js';
   import {
     DECK_SIZE,
@@ -37,6 +37,8 @@
   const MINI_CARD_W = 18;
   const THEME_STORAGE_KEY = 'triplettes-theme';
   const REVEALED_INFO_STORAGE_KEY = 'triplettes-show-revealed';
+  const PLAYERS_STORAGE_KEY = 'triplettes-players';
+  const DIFFICULTY_STORAGE_KEY = 'triplettes-difficulty';
   const AI_SPEED_STORAGE_KEY = 'triplettes-ai-speed';
   const AI_SPEED_MIN = 0.5;
   const AI_SPEED_MAX = 3;
@@ -214,6 +216,14 @@
     }
   }
 
+  function persistSetup() {
+    try {
+      localStorage.setItem(PLAYERS_STORAGE_KEY, String(numPlayers));
+      localStorage.setItem(DIFFICULTY_STORAGE_KEY, difficultyId);
+      localStorage.setItem(REVEALED_INFO_STORAGE_KEY, showRevealedInfo ? '1' : '0');
+    } catch {}
+  }
+
   function clearPendingTimer() {
     if (pendingTimer !== null) {
       clearTimeout(pendingTimer);
@@ -319,6 +329,7 @@
     cancelDealAnimation();
     numPlayers = playersCount;
     difficultyId = diffId;
+    persistSetup();
     const diff = getDifficulty(diffId);
     const seed = randomSeed();
     const names = pickBotNames(playersCount, seed);
@@ -370,9 +381,6 @@
     showRevealedInfo: nextShowRevealed,
   }) {
     showRevealedInfo = Boolean(nextShowRevealed);
-    try {
-      localStorage.setItem(REVEALED_INFO_STORAGE_KEY, showRevealedInfo ? '1' : '0');
-    } catch {}
     newGameOpen = false;
     startNewGame(nextPlayers, nextDifficulty);
   }
@@ -697,8 +705,16 @@
         theme = saved;
       }
       const savedRevealed = localStorage.getItem(REVEALED_INFO_STORAGE_KEY);
-      if (savedRevealed === '1') {
-        showRevealedInfo = true;
+      if (savedRevealed === '1' || savedRevealed === '0') {
+        showRevealedInfo = savedRevealed === '1';
+      }
+      const savedPlayers = Number(localStorage.getItem(PLAYERS_STORAGE_KEY));
+      if (savedPlayers === 3 || savedPlayers === 4 || savedPlayers === 5 || savedPlayers === 6) {
+        numPlayers = savedPlayers;
+      }
+      const savedDiff = localStorage.getItem(DIFFICULTY_STORAGE_KEY);
+      if (savedDiff && DIFFICULTIES.some((d) => d.id === savedDiff)) {
+        difficultyId = savedDiff;
       }
       const savedSpeed = Number(localStorage.getItem(AI_SPEED_STORAGE_KEY));
       if (Number.isFinite(savedSpeed) && savedSpeed >= AI_SPEED_MIN && savedSpeed <= AI_SPEED_MAX) {
@@ -1288,7 +1304,7 @@
     transform: translate3d(0, var(--turn-y, 0px), 0);
     border-radius: 10px;
     background: var(--row-active-bg);
-    box-shadow: 0 2px 10px color-mix(in srgb, var(--shadow) 55%, transparent);
+    box-shadow: var(--row-active-shadow);
     pointer-events: none;
     z-index: 0;
     opacity: 0;

@@ -25,7 +25,10 @@
   --btn-neu-active-to: #ffffff;
   --accent: #7b4f1e;
   --accent-soft: rgba(123, 79, 30, 0.11);
-  --row-active-bg: rgba(123, 79, 30, 0.09);
+  --row-active-bg: rgba(123, 79, 30, 0.2);
+  --row-active-shadow:
+    0 0 0 1px rgba(123, 79, 30, 0.34),
+    0 10px 26px rgba(90, 52, 16, 0.32);
   --winner-bg: rgba(47, 107, 67, 0.17);
   --shadow: rgba(0, 0, 0, 0.15);
 
@@ -80,7 +83,10 @@
     --btn-neu-active-to: #3b2e19;
     --accent: #c89050;
     --accent-soft: rgba(200, 144, 80, 0.15);
-    --row-active-bg: rgba(200, 144, 80, 0.13);
+    --row-active-bg: rgba(200, 144, 80, 0.34);
+    --row-active-shadow:
+      0 0 0 1px rgba(232, 184, 120, 0.62),
+      0 0 32px rgba(200, 144, 80, 0.42);
     --winner-bg: rgba(104, 184, 130, 0.22);
     --shadow: rgba(0, 0, 0, 0.55);
 
@@ -133,7 +139,10 @@
   --btn-neu-active-to: #3b2e19;
   --accent: #c89050;
   --accent-soft: rgba(200, 144, 80, 0.15);
-  --row-active-bg: rgba(200, 144, 80, 0.13);
+  --row-active-bg: rgba(200, 144, 80, 0.34);
+  --row-active-shadow:
+    0 0 0 1px rgba(232, 184, 120, 0.62),
+    0 0 32px rgba(200, 144, 80, 0.42);
   --winner-bg: rgba(104, 184, 130, 0.22);
   --shadow: rgba(0, 0, 0, 0.55);
 

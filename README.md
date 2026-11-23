@@ -13,4 +13,6 @@ npm run dev
 
 Open the address Vite prints. The menu covers language, theme, speed, the rules, and a new game.
 
+The latest release is published at <https://zulko.github.io/triplettes/>.
+
 [MIT](LICENSE)

@@ -1,0 +1,196 @@
+:root {
+  --font-display: 'Courgette', Georgia, serif;
+  --font-hand: 'Patrick Hand', 'Archivo Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Archivo Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --font-card: 'Oswald', 'Archivo Narrow', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Light theme — warm parchment */
+  --bg: #faf8f3;
+  --text: #1a1a1a;
+  --title-color: #161412;
+  --text-muted: #5a5248;
+  --surface: #ffffff;
+  --surface-alt: #f2ede2;
+  --border: #c5baa8;
+  --border-subtle: rgba(123, 79, 30, 0.16);
+  --btn-bg: #f0ebe0;
+  --btn-bg-hover: #e2d9c8;
+  --btn-text: #1a1a1a;
+  --btn-neu-bg: #ffffff;
+  --btn-neu-shadow:
+    3px 3px 10px rgba(0, 0, 0, 0.1),
+    -2px -2px 9px rgba(255, 255, 255, 0.96),
+    0 0 0 1px rgba(0, 0, 0, 0.07);
+  --btn-neu-active-from: #ebe5da;
+  --btn-neu-active-to: #ffffff;
+  --accent: #7b4f1e;
+  --accent-soft: rgba(123, 79, 30, 0.11);
+  --row-active-bg: rgba(123, 79, 30, 0.09);
+  --winner-bg: rgba(47, 107, 67, 0.17);
+  --shadow: rgba(0, 0, 0, 0.15);
+
+  /* Status & card semantic colors (light) */
+  --ok: #2f6b43;
+  --ok-soft: rgba(47, 107, 67, 0.12);
+  --bad: #a6342e;
+  --bad-soft: rgba(166, 52, 46, 0.14);
+  --seven: #9c6a14;
+  --seven-soft: rgba(156, 106, 20, 0.15);
+
+  /* Playing cards (light) */
+  --card-face-bg: #fffdf8;
+  --card-face-border: #cfc4b2;
+  --card-face-text: #221b14;
+  --card-face-muted: #7a6d5e;
+  --card-back-rim: #fffdf8;
+  --card-back-bg: #9e2a2b;
+  --card-back-bg2: #832021;
+  --card-back-weave: rgba(255, 245, 230, 0.22);
+  --card-back-inner-line: rgba(255, 244, 228, 0.45);
+  --card-back-border: #cfc4b2;
+  --card-hint-bg: rgba(44, 10, 10, 0.72);
+  --card-hint-text: #fff9ef;
+  --card-hint-bound: #fae6cc;
+  --card-hint-seven: #ffd66b;
+  --card-empty-border: rgba(123, 79, 30, 0.24);
+  --card-empty-bg: rgba(123, 79, 30, 0.035);
+  --card-shadow: 0 2px 5px rgba(34, 24, 14, 0.14);
+  --card-shadow-hover: 0 6px 14px rgba(123, 79, 30, 0.26);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #120f08;
+    --text: #f0e6cc;
+    --title-color: #faf6ee;
+    --text-muted: #a89070;
+    --surface: #1e1810;
+    --surface-alt: #282012;
+    --border: #4a3a20;
+    --border-subtle: rgba(200, 144, 80, 0.2);
+    --btn-bg: #3a2c14;
+    --btn-bg-hover: #4a3a20;
+    --btn-text: #f0e6cc;
+    --btn-neu-bg: #292012;
+    --btn-neu-shadow:
+      4px 4px 12px rgba(0, 0, 0, 0.5),
+      -2px -2px 8px rgba(255, 255, 255, 0.05),
+      0 0 0 1px rgba(255, 255, 255, 0.09);
+    --btn-neu-active-from: #1b150b;
+    --btn-neu-active-to: #3b2e19;
+    --accent: #c89050;
+    --accent-soft: rgba(200, 144, 80, 0.15);
+    --row-active-bg: rgba(200, 144, 80, 0.13);
+    --winner-bg: rgba(104, 184, 130, 0.22);
+    --shadow: rgba(0, 0, 0, 0.55);
+
+    --ok: #68b882;
+    --ok-soft: rgba(104, 184, 130, 0.16);
+    --bad: #e06a60;
+    --bad-soft: rgba(224, 106, 96, 0.18);
+    --seven: #e3b254;
+    --seven-soft: rgba(227, 178, 84, 0.18);
+
+    --card-face-bg: #f5ede0;
+    --card-face-border: #bfa989;
+    --card-face-text: #21170e;
+    --card-face-muted: #705c44;
+    --card-back-rim: #f0e6d6;
+    --card-back-bg: #8e2728;
+    --card-back-bg2: #731d1e;
+    --card-back-weave: rgba(255, 240, 220, 0.2);
+    --card-back-inner-line: rgba(255, 240, 220, 0.42);
+    --card-back-border: #b8a384;
+    --card-hint-bg: rgba(34, 8, 8, 0.75);
+    --card-hint-text: #fff8eb;
+    --card-hint-bound: #f5dec0;
+    --card-hint-seven: #ffd060;
+    --card-empty-border: rgba(200, 144, 80, 0.22);
+    --card-empty-bg: rgba(200, 144, 80, 0.04);
+    --card-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
+    --card-shadow-hover: 0 7px 16px rgba(200, 144, 80, 0.32);
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #120f08;
+  --text: #f0e6cc;
+  --title-color: #faf6ee;
+  --text-muted: #a89070;
+  --surface: #1e1810;
+  --surface-alt: #282012;
+  --border: #4a3a20;
+  --border-subtle: rgba(200, 144, 80, 0.2);
+  --btn-bg: #3a2c14;
+  --btn-bg-hover: #4a3a20;
+  --btn-text: #f0e6cc;
+  --btn-neu-bg: #292012;
+  --btn-neu-shadow:
+    4px 4px 12px rgba(0, 0, 0, 0.5),
+    -2px -2px 8px rgba(255, 255, 255, 0.05),
+    0 0 0 1px rgba(255, 255, 255, 0.09);
+  --btn-neu-active-from: #1b150b;
+  --btn-neu-active-to: #3b2e19;
+  --accent: #c89050;
+  --accent-soft: rgba(200, 144, 80, 0.15);
+  --row-active-bg: rgba(200, 144, 80, 0.13);
+  --winner-bg: rgba(104, 184, 130, 0.22);
+  --shadow: rgba(0, 0, 0, 0.55);
+
+  --ok: #68b882;
+  --ok-soft: rgba(104, 184, 130, 0.16);
+  --bad: #e06a60;
+  --bad-soft: rgba(224, 106, 96, 0.18);
+  --seven: #e3b254;
+  --seven-soft: rgba(227, 178, 84, 0.18);
+
+  --card-face-bg: #f5ede0;
+  --card-face-border: #bfa989;
+  --card-face-text: #21170e;
+  --card-face-muted: #705c44;
+  --card-back-rim: #f0e6d6;
+  --card-back-bg: #8e2728;
+  --card-back-bg2: #731d1e;
+  --card-back-weave: rgba(255, 240, 220, 0.2);
+  --card-back-inner-line: rgba(255, 240, 220, 0.42);
+  --card-back-border: #b8a384;
+  --card-hint-bg: rgba(34, 8, 8, 0.75);
+  --card-hint-text: #fff8eb;
+  --card-hint-bound: #f5dec0;
+  --card-hint-seven: #ffd060;
+  --card-empty-border: rgba(200, 144, 80, 0.22);
+  --card-empty-bg: rgba(200, 144, 80, 0.04);
+  --card-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
+  --card-shadow-hover: 0 7px 16px rgba(200, 144, 80, 0.32);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

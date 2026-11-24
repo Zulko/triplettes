@@ -29,6 +29,13 @@ function decodeSlotAction(code) {
   return revealHand(player, kind === 0 ? HandEnd.Lowest : HandEnd.Highest);
 }
 
+// Depth bits mark a copy sitting behind the end. Turning that card over means
+// revealing the end in front of it, so order decisions have to score that face.
+function faceSlotCode(code) {
+  if ((code >>> 8) === 2) return code;
+  return code & ~0x03;
+}
+
 function isSlotOwnHand(code, viewer) {
   const kind = code >>> 8;
   if (kind === 2) return false;
@@ -207,20 +214,29 @@ export class CspTriplettesPlayer {
     const targetCard = chosenPlan.card;
     const targetSlots = chosenPlan.slots;
 
-    // Pick the riskiest slot first:
+    // Pick the riskiest card we would actually turn over:
     // 1. Lowest empirical hit count from simulations.
     // 2. Break ties by probing genuinely unknown slots before already-known slots
     //    (critical at low simulation counts where an unknown slot can tie at 1/1 or 5/5).
     // 3. Break remaining ties by revealing center / opponents before our own hand
     //    (so a player only reveals their own card first when all needed cards are in their own hand).
+    // Buried copies (depth > 0) share an action with the end in front of them.
+    // Scoring the buried copy would open on a known face whenever the card behind
+    // it is the long shot of the trio.
     let bestHits = Infinity;
     let bestKnownRank = Infinity;
     let bestOwnRank = Infinity;
     let bestSlotCandidates = [];
+    const seenFaces = new Set();
 
     for (let k = 0; k < targetSlots.length; k++) {
-      const code = targetSlots[k];
-      const hits = slotHits.get((code << 4) | targetCard) ?? 0;
+      const code = faceSlotCode(targetSlots[k]);
+      if (seenFaces.has(code)) continue;
+      seenFaces.add(code);
+      const hits =
+        slotHits.get((code << 4) | targetCard) ??
+        slotHits.get((targetSlots[k] << 4) | targetCard) ??
+        0;
       const knownRank = isSlotExactKnown(code, knowledge, view) ? 1 : 0;
       const ownRank = isSlotOwnHand(code, view.viewer) ? 1 : 0;
 

@@ -124,6 +124,8 @@
     displayView && !isDealing && !displayView.isOver() ? displayView.currentPlayer : null
   );
 
+  let gameOver = $derived(Boolean(displayView && !resolving && displayView.isOver()));
+
   let aiSpeedLabel = $derived(`${Number(aiRevealSec.toFixed(2))}s`);
 
   function updateAiSpeed(nextVal) {
@@ -897,70 +899,76 @@
         </div>
 
         <section
-          class="middle-zone"
-          aria-label={s.centerAria}
+          class={['middle-zone', gameOver && 'is-over']}
+          aria-label={gameOver ? undefined : s.centerAria}
           style:--middle-count={displayView.middle.length}
         >
-          <div class="middle-cards">
-            {#if isDealing}
-              <div
-                class={['deal-deck', dealPhase !== 'prepare' && 'is-dealing-out']}
-                style:--deck-fade-delay={`${(DECK_SIZE - 2) * DEAL_STEP_MS}ms`}
-                aria-hidden="true"
-              >
-                <span class="deck-layer layer-3"></span>
-                <span class="deck-layer layer-2"></span>
-                <span class="deck-layer layer-1">
-                  <span class="deck-panel"></span>
-                </span>
-              </div>
-            {/if}
+          {#if gameOver}
+            <button type="button" class="middle-replay" onclick={openNewGameModal}>
+              {s.newGameBtn}
+            </button>
+          {:else}
+            <div class="middle-cards">
+              {#if isDealing}
+                <div
+                  class={['deal-deck', dealPhase !== 'prepare' && 'is-dealing-out']}
+                  style:--deck-fade-delay={`${(DECK_SIZE - 2) * DEAL_STEP_MS}ms`}
+                  aria-hidden="true"
+                >
+                  <span class="deck-layer layer-3"></span>
+                  <span class="deck-layer layer-2"></span>
+                  <span class="deck-layer layer-1">
+                    <span class="deck-panel"></span>
+                  </span>
+                </div>
+              {/if}
 
-            {#each displayView.middle as slot, idx (slot.id ?? idx)}
-              {@const dealIndex = playerCardsTotal + idx}
-              {@const dealKey = `m-${idx}`}
-              {@const offset = dealOffsets[dealKey]}
-              {@const middleHintVal =
-                slot.state === MiddleSlotState.Hidden && revealedMemory
-                  ? revealedMemory.middleExact[idx]
-                  : null}
-              <div
-                class={[
-                  'deal-wrap',
-                  isDealing && dealPhase === 'prepare' && 'is-undealt',
-                  isDealing && dealPhase !== 'prepare' && offset && 'is-dealing-in',
-                ]}
-                data-deal-key={dealKey}
-                data-card-loc={dealKey}
-                style:--deal-dx={offset ? `${offset.dx}px` : '0px'}
-                style:--deal-dy={offset ? `${offset.dy}px` : '0px'}
-                style:--deal-rot={offset ? `${offset.rot}deg` : '0deg'}
-                style:--deal-delay={isDealing ? `${dealIndex * DEAL_STEP_MS}ms` : '0ms'}
-              >
-                <PlayingCard
-                  value={slot.card}
-                  faceUp={slot.state === MiddleSlotState.Revealed}
-                  revealed={slot.state === MiddleSlotState.Revealed}
-                  empty={slot.state === MiddleSlotState.Empty}
-                  clickable={humanCanAct && slot.state === MiddleSlotState.Hidden}
-                  highlight={slot.state === MiddleSlotState.Revealed ? cardHighlight : null}
-                  callout={aiCalloutLoc === dealKey}
-                  memoryHint={middleHintVal !== null
-                    ? { kind: 'exact', value: middleHintVal }
+              {#each displayView.middle as slot, idx (slot.id ?? idx)}
+                {@const dealIndex = playerCardsTotal + idx}
+                {@const dealKey = `m-${idx}`}
+                {@const offset = dealOffsets[dealKey]}
+                {@const middleHintVal =
+                  slot.state === MiddleSlotState.Hidden && revealedMemory
+                    ? revealedMemory.middleExact[idx]
                     : null}
-                  size="md"
-                  ariaLabel={slot.state === MiddleSlotState.Empty
-                    ? s.emptySlotAria(idx + 1)
-                    : slot.state === MiddleSlotState.Revealed
-                      ? s.revealedMiddleAria(idx + 1, slot.card)
-                      : s.hiddenMiddleAria(idx + 1)}
-                  onclick={humanCanAct && slot.state === MiddleSlotState.Hidden
-                    ? () => handleMiddleClick(idx)
-                    : undefined}
-                />
-              </div>
-            {/each}
-          </div>
+                <div
+                  class={[
+                    'deal-wrap',
+                    isDealing && dealPhase === 'prepare' && 'is-undealt',
+                    isDealing && dealPhase !== 'prepare' && offset && 'is-dealing-in',
+                  ]}
+                  data-deal-key={dealKey}
+                  data-card-loc={dealKey}
+                  style:--deal-dx={offset ? `${offset.dx}px` : '0px'}
+                  style:--deal-dy={offset ? `${offset.dy}px` : '0px'}
+                  style:--deal-rot={offset ? `${offset.rot}deg` : '0deg'}
+                  style:--deal-delay={isDealing ? `${dealIndex * DEAL_STEP_MS}ms` : '0ms'}
+                >
+                  <PlayingCard
+                    value={slot.card}
+                    faceUp={slot.state === MiddleSlotState.Revealed}
+                    revealed={slot.state === MiddleSlotState.Revealed}
+                    empty={slot.state === MiddleSlotState.Empty}
+                    clickable={humanCanAct && slot.state === MiddleSlotState.Hidden}
+                    highlight={slot.state === MiddleSlotState.Revealed ? cardHighlight : null}
+                    callout={aiCalloutLoc === dealKey}
+                    memoryHint={middleHintVal !== null
+                      ? { kind: 'exact', value: middleHintVal }
+                      : null}
+                    size="md"
+                    ariaLabel={slot.state === MiddleSlotState.Empty
+                      ? s.emptySlotAria(idx + 1)
+                      : slot.state === MiddleSlotState.Revealed
+                        ? s.revealedMiddleAria(idx + 1, slot.card)
+                        : s.hiddenMiddleAria(idx + 1)}
+                    onclick={humanCanAct && slot.state === MiddleSlotState.Hidden
+                      ? () => handleMiddleClick(idx)
+                      : undefined}
+                  />
+                </div>
+              {/each}
+            </div>
+          {/if}
         </section>
 
         <div class="human-zone">
@@ -1297,12 +1305,12 @@
 
   .turn-slider {
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 8px;
+    right: 8px;
     top: 0;
     height: var(--turn-h, 0px);
     transform: translate3d(0, var(--turn-y, 0px), 0);
-    border-radius: 10px;
+    border-radius: 16px;
     background: var(--row-active-bg);
     box-shadow: var(--row-active-shadow);
     pointer-events: none;
@@ -1340,6 +1348,39 @@
     align-items: center;
     justify-content: center;
     padding: 8px 4px;
+  }
+
+  .middle-zone.is-over {
+    min-height: calc(44px * 7 / 5 + 16px);
+  }
+
+  .middle-replay {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fffdf8;
+    font-family: var(--font-hand);
+    font-size: 1.12rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--shadow) 65%, transparent);
+  }
+
+  .middle-replay:hover {
+    filter: brightness(1.08);
+  }
+
+  .middle-replay:active {
+    transform: translateY(1px);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .middle-replay {
+      animation: popover-in 0.18s ease-out;
+    }
   }
 
   .middle-cards {

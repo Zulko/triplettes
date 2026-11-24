@@ -68,10 +68,10 @@
         } else {
           const lines = [];
           if (idx === 0 && memory.lowBound !== null) {
-            lines.push(`>${memory.lowBound}`);
+            lines.push(`≥${memory.lowBound}`);
           }
           if (idx === slots.length - 1 && memory.highBound !== null) {
-            lines.push(`<${memory.highBound}`);
+            lines.push(`≤${memory.highBound}`);
           }
           if (lines.length > 0) {
             memoryHint = { kind: 'bounds', lines };

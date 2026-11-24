@@ -233,9 +233,14 @@ export class CspTriplettesPlayer {
       const code = faceSlotCode(targetSlots[k]);
       if (seenFaces.has(code)) continue;
       seenFaces.add(code);
+      // The face we would actually turn has to be able to be the target.
+      // A known 8, or the bottom of a long hand, must not be played for an 11.
+      const faceInfo = getActionKnownInfo(decodeSlotAction(code), knowledge, view);
+      if (faceInfo.known ? faceInfo.value !== targetCard : targetCard < faceInfo.lo || targetCard > faceInfo.hi) {
+        continue;
+      }
       const hits =
         slotHits.get((code << 4) | targetCard) ??
-        slotHits.get((targetSlots[k] << 4) | targetCard) ??
         0;
       const knownRank = isSlotExactKnown(code, knowledge, view) ? 1 : 0;
       const ownRank = isSlotOwnHand(code, view.viewer) ? 1 : 0;
@@ -253,6 +258,10 @@ export class CspTriplettesPlayer {
       } else if (hits === bestHits && knownRank === bestKnownRank && ownRank === bestOwnRank) {
         bestSlotCandidates.push(code);
       }
+    }
+
+    if (bestSlotCandidates.length === 0) {
+      return this._smartFallback(legalActions, knowledge, view, this.numSimulations);
     }
 
     bestSlotCandidates.sort((a, b) => a - b);
@@ -274,9 +283,10 @@ export class CspTriplettesPlayer {
 
   _smartFallback(legalActions, knowledge, view, simulationsRun) {
     const target = view.targetCard();
-    const tier0 = []; // Non-own unknown slot compatible with target (if any)
-    const tier1 = []; // Any non-own unknown slot (gathers fresh info)
-    const tier2 = []; // Any non-own slot (avoids leaking our own hand)
+    const probe = []; // Unknown card that could still be the target
+    const sure = []; // Known card that is the target
+    const cover = []; // A bust that does not spend a known match or a known miss
+    const anyOther = [];
 
     for (let i = 0; i < legalActions.length; i++) {
       const action = legalActions[i];
@@ -284,23 +294,33 @@ export class CspTriplettesPlayer {
       if (isOwn) continue;
 
       const info = getActionKnownInfo(action, knowledge, view);
-      if (!info.known) {
-        if (target === null || (target >= info.lo && target <= info.hi)) {
-          tier0.push(action);
-        }
-        tier1.push(action);
-      }
-      tier2.push(action);
+      const exactMiss = target !== null && info.known && info.value !== target;
+      const canBeTarget =
+        target === null ||
+        (info.known ? info.value === target : target >= info.lo && target <= info.hi);
+      if (canBeTarget && !info.known) probe.push(action);
+      else if (canBeTarget && info.known) sure.push(action);
+      if (!exactMiss && !(canBeTarget && info.known)) cover.push(action);
+      anyOther.push(action);
     }
 
+    // Once a value is showing, never turn a card that cannot be that value
+    // while any card that could be it is still available. A known match is
+    // kept for last, and is not spent when it cannot finish the trio.
+    const needed = target === null ? 0 : 3 - view.revealedThisTurn.length;
+    const canFinish = probe.length + sure.length >= needed;
     const pool =
-      tier0.length > 0
-        ? tier0
-        : tier1.length > 0
-          ? tier1
-          : tier2.length > 0
-            ? tier2
-            : legalActions;
+      probe.length > 0
+        ? probe
+        : canFinish && sure.length > 0
+          ? sure
+          : cover.length > 0
+            ? cover
+            : sure.length > 0
+              ? sure
+              : anyOther.length > 0
+                ? anyOther
+                : legalActions;
 
     return {
       chosenAction: pool[this.rng.genRange(pool.length)],

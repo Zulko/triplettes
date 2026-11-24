@@ -100,12 +100,11 @@ export class TriplettesKnowledge {
               }
             }
             if (isRemoved) continue;
+            // A sorted hand can hold another copy of v, so the bound is ≤ / ≥, not strict.
             if (j < idx) {
-              const upper = Math.max(0, v - 1);
-              if (upper < boundsArr[j][1]) boundsArr[j][1] = upper;
+              if (v < boundsArr[j][1]) boundsArr[j][1] = v;
             } else if (j > idx) {
-              const lower = v + 1;
-              if (lower > boundsArr[j][0]) boundsArr[j][0] = lower;
+              if (v > boundsArr[j][0]) boundsArr[j][0] = v;
             }
           }
         }
@@ -171,6 +170,44 @@ export class TriplettesKnowledge {
       }
       for (let j = len - 2; j >= 0; j--) {
         if (b[j + 1][1] < b[j][1]) b[j][1] = b[j + 1][1];
+      }
+      // At most two copies of a value fit in one hand. A 7-card low end is at
+      // most a 9, and a known 8 on top of that hand pulls the low end down to 5.
+      for (let j = 0; j < len; j++) {
+        if (h[j] !== null) continue;
+        let minV = Math.ceil((j + 1) / MAX_COPIES_PER_HAND);
+        let maxV = MAX_CARD + 1 - Math.ceil((len - j) / MAX_COPIES_PER_HAND);
+        for (let k = 0; k < len; k++) {
+          if (h[k] === null) continue;
+          const v = h[k];
+          if (k > j) {
+            const cap = v + 1 - Math.ceil((k - j + 1) / MAX_COPIES_PER_HAND);
+            if (cap < maxV) maxV = cap;
+          } else if (k < j) {
+            const floor = v - 1 + Math.ceil((j - k + 1) / MAX_COPIES_PER_HAND);
+            if (floor > minV) minV = floor;
+          }
+        }
+        if (minV < MIN_CARD) minV = MIN_CARD;
+        if (maxV > MAX_CARD) maxV = MAX_CARD;
+        if (b[j][0] < minV) b[j][0] = minV;
+        if (b[j][1] > maxV) b[j][1] = maxV;
+        while (b[j][0] < b[j][1] && remainingCounts[b[j][0]] === 0) b[j][0]++;
+        while (b[j][1] > b[j][0] && remainingCounts[b[j][1]] === 0) b[j][1]--;
+      }
+      for (let j = 1; j < len; j++) {
+        if (b[j - 1][0] > b[j][0]) b[j][0] = b[j - 1][0];
+      }
+      for (let j = len - 2; j >= 0; j--) {
+        if (b[j + 1][1] < b[j][1]) b[j][1] = b[j + 1][1];
+      }
+      for (let j = 0; j < len; j++) {
+        if (h[j] !== null) {
+          b[j][0] = h[j];
+          b[j][1] = h[j];
+        } else if (b[j][0] > b[j][1]) {
+          b[j][0] = b[j][1];
+        }
       }
     }
 
@@ -366,8 +403,8 @@ function isHallSatisfiable(remaining, demand, prefix) {
 /**
  * Computes publicly revealed information from game history:
  * - handExact[p][idx]: exact card value if that remaining slot was ever revealed, else null
- * - handLowBound[p]: highest value removed in a triplette from p's low end (remaining cards are > value), else null
- * - handHighBound[p]: lowest value removed in a triplette from p's high end (remaining cards are < value), else null
+ * - handLowBound[p]: highest value removed in a triplette from p's low end (remaining cards are ≥ value), else null
+ * - handHighBound[p]: lowest value removed in a triplette from p's high end (remaining cards are ≤ value), else null
  * - middleExact[slot]: exact card value if that still-present middle slot was ever revealed, else null
  */
 export function computeRevealedMemory(view) {

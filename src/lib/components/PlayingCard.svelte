@@ -105,7 +105,7 @@
   .card-slot-shell,
   .card-scene {
     --w: var(--card-w, var(--card-default-w, 44px));
-    --r: clamp(3.5px, calc(var(--w) * 0.13), 6px);
+    --r: clamp(3.5px, calc(var(--w) * 0.13), 14px);
   }
 
   .card-slot-shell {
@@ -241,7 +241,8 @@
   .card-back {
     transform: rotateY(0deg) translateZ(0.5px);
     background: var(--card-back-rim);
-    border: 1.25px solid var(--card-back-border);
+    border: solid var(--card-back-border);
+    border-width: clamp(1.25px, calc(var(--w) * 0.028), 2.25px);
     box-shadow: var(--card-shadow);
   }
 
@@ -249,7 +250,8 @@
     transform: rotateY(180deg) translateZ(0.5px);
     background: var(--card-face-bg);
     color: var(--card-face-text);
-    border: 1.25px solid var(--card-face-border);
+    border: solid var(--card-face-border);
+    border-width: clamp(1.25px, calc(var(--w) * 0.028), 2.25px);
     box-shadow: var(--card-shadow);
   }
 
@@ -260,7 +262,7 @@
 
   .back-panel {
     position: absolute;
-    inset: clamp(2px, calc(var(--w) * 0.085), 3.5px);
+    inset: clamp(2px, calc(var(--w) * 0.085), 9px);
     border-radius: max(1.5px, calc(var(--r) - 2px));
     background:
       repeating-linear-gradient(
@@ -283,7 +285,7 @@
   .back-panel::before {
     content: '';
     position: absolute;
-    inset: clamp(1.5px, calc(var(--w) * 0.055), 2.25px);
+    inset: clamp(1.5px, calc(var(--w) * 0.055), 6px);
     border-radius: max(1px, calc(var(--r) - 3.5px));
     border: 1px solid var(--card-back-inner-line);
     pointer-events: none;

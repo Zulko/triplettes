@@ -482,12 +482,16 @@
     }
 
     const destRect = destEl.getBoundingClientRect();
+    const miniRect = destEl.querySelector('.mini-card')?.getBoundingClientRect();
+    const miniW = miniRect?.width || MINI_CARD_W;
+    const fanX = (miniW * 2) / MINI_CARD_W;
+    const fanY = (miniW * 1.5) / MINI_CARD_W;
     const items = sourceRects.map((src, i) => {
-      const targetLeft = destRect.left + i * 2;
-      const targetTop = destRect.top + i * 1.5;
+      const targetLeft = destRect.left + i * fanX;
+      const targetTop = destRect.top + i * fanY;
       const dx = Math.round((targetLeft - src.left) * 10) / 10;
       const dy = Math.round((targetTop - src.top) * 10) / 10;
-      const scale = Math.round((MINI_CARD_W / src.width) * 1000) / 1000;
+      const scale = Math.round((miniW / src.width) * 1000) / 1000;
       return {
         id: `${runGameId}-${card}-${i}`,
         fromLeft: src.left,
@@ -736,7 +740,7 @@
 
 <svelte:window onkeydown={handleWindowKeydown} />
 
-<div class="page">
+<div class="page" style:--players={displayView?.numPlayers ?? numPlayers}>
   <div class="game-shell">
     <header class="page-header">
       <h1>{s.title}</h1>
@@ -1042,23 +1046,35 @@
 
 <style>
   .page {
+    /* Compact column is 560px. Grow it when both axes have spare room.
+       Height budget matches the scale-1 table: header and middle/human chrome,
+       plus one opponent row per extra player. */
+    --table-h: calc(276px + 68px * (var(--players, 4) - 1));
+    --layout-scale: clamp(
+      1,
+      min((100vw - 8px) / 560px, (100dvh - 8px) / var(--table-h)),
+      2.5
+    );
     min-height: 100dvh;
     width: 100%;
-    max-width: 560px;
+    max-width: min(100%, calc(560px * var(--layout-scale)));
     margin: 0 auto;
-    padding: 14px 10px 18px;
+    padding:
+      calc(14px * var(--layout-scale))
+      calc(10px * var(--layout-scale))
+      calc(18px * var(--layout-scale));
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: safe center;
   }
 
   .game-shell {
     width: 100%;
-    margin: auto 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: calc(12px * var(--layout-scale));
   }
 
   .page-header {
@@ -1074,7 +1090,7 @@
   .page-header h1 {
     margin: 0;
     font-family: var(--font-display);
-    font-size: clamp(2rem, 5.2vw, 2.65rem);
+    font-size: clamp(2rem, 5.2vw, calc(2.65rem * var(--layout-scale)));
     font-weight: 400;
     letter-spacing: 0.02em;
     line-height: 1.05;
@@ -1300,7 +1316,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: calc(6px * var(--layout-scale));
   }
 
   .turn-slider {
@@ -1335,7 +1351,7 @@
     z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: calc(2px * var(--layout-scale));
   }
 
   /* Frameless single-line center card strip that scales cleanly on narrow screens */
@@ -1347,11 +1363,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 4px;
+    padding: calc(8px * var(--layout-scale)) calc(4px * var(--layout-scale));
   }
 
   .middle-zone.is-over {
-    min-height: calc(44px * 7 / 5 + 16px);
+    min-height: calc((44px * 7 / 5 + 16px) * var(--layout-scale));
   }
 
   .middle-replay {
@@ -1361,7 +1377,7 @@
     background: var(--accent);
     color: #fffdf8;
     font-family: var(--font-hand);
-    font-size: 1.12rem;
+    font-size: calc(1.12rem * var(--layout-scale));
     letter-spacing: 0.04em;
     line-height: 1;
     white-space: nowrap;
@@ -1384,9 +1400,9 @@
   }
 
   .middle-cards {
-    --mid-gap: clamp(3px, 1.4cqi, 6px);
+    --mid-gap: clamp(3px, 1.4cqi, calc(6px * var(--layout-scale)));
     --card-w: min(
-      44px,
+      calc(44px * var(--layout-scale)),
       calc((100cqi - (var(--middle-count, 8) - 1) * var(--mid-gap)) / var(--middle-count, 8))
     );
     position: relative;
@@ -1422,18 +1438,18 @@
   .deck-layer {
     position: absolute;
     inset: 0;
-    border-radius: 6px;
+    border-radius: calc(6px * var(--layout-scale));
     background: var(--card-back-rim);
     border: 1.25px solid var(--card-back-border);
     box-shadow: var(--card-shadow);
   }
 
   .layer-3 {
-    transform: translate(4px, 4px);
+    transform: translate(calc(4px * var(--layout-scale)), calc(4px * var(--layout-scale)));
   }
 
   .layer-2 {
-    transform: translate(2px, 2px);
+    transform: translate(calc(2px * var(--layout-scale)), calc(2px * var(--layout-scale)));
   }
 
   .layer-1 {
@@ -1444,8 +1460,8 @@
 
   .deck-panel {
     position: absolute;
-    inset: 3.5px;
-    border-radius: 4px;
+    inset: calc(3.5px * var(--layout-scale));
+    border-radius: calc(4px * var(--layout-scale));
     background:
       repeating-linear-gradient(
         45deg,
@@ -1463,8 +1479,8 @@
   .deck-panel::before {
     content: '';
     position: absolute;
-    inset: 2px;
-    border-radius: 2.5px;
+    inset: calc(2px * var(--layout-scale));
+    border-radius: calc(2.5px * var(--layout-scale));
     border: 1px solid var(--card-back-inner-line);
   }
 
@@ -1515,7 +1531,7 @@
   .flying-card {
     position: fixed;
     transform-origin: top left;
-    border-radius: 6px;
+    border-radius: calc(var(--fly-w, 40px) * 0.13);
     background: var(--card-face-bg);
     color: var(--card-face-text);
     border: 1.5px solid var(--ok);

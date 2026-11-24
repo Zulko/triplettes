@@ -297,8 +297,8 @@
     z-index: 1;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 5px 10px;
+    gap: calc(10px * var(--layout-scale, 1));
+    padding: calc(5px * var(--layout-scale, 1)) calc(10px * var(--layout-scale, 1));
     border-radius: 10px;
     background: transparent;
     border: none;
@@ -307,7 +307,7 @@
   }
 
   .seat-human {
-    padding: 7px 10px;
+    padding: calc(7px * var(--layout-scale, 1)) calc(10px * var(--layout-scale, 1));
   }
 
   .seat-row.is-winner {
@@ -325,12 +325,12 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 5px;
+    gap: calc(5px * var(--layout-scale, 1));
   }
 
   .seat-meta-bot {
     position: absolute;
-    right: calc(100% + 14px);
+    right: calc(100% + 14px * var(--layout-scale, 1));
     top: 50%;
     transform: translateY(-50%);
     align-items: flex-end;
@@ -344,7 +344,7 @@
 
   .seat-name {
     font-family: var(--font-hand);
-    font-size: 1.24rem;
+    font-size: calc(1.24rem * var(--layout-scale, 1));
     font-weight: 400;
     letter-spacing: 0.02em;
     line-height: 1.05;
@@ -365,13 +365,13 @@
   .triplette-tray {
     display: flex;
     align-items: center;
-    gap: 3px;
+    gap: calc(3px * var(--layout-scale, 1));
   }
 
   .mini-stack {
     position: relative;
-    width: 22px;
-    height: 28px;
+    width: calc(22px * var(--layout-scale, 1));
+    height: calc(28px * var(--layout-scale, 1));
     flex-shrink: 0;
     transition: opacity 120ms ease;
   }
@@ -392,21 +392,21 @@
       transform: translateY(0) scale(1, 1) rotate(0deg);
     }
     18% {
-      transform: translateY(-6px) scale(0.97, 1.05) rotate(-3deg);
+      transform: translateY(calc(-6px * var(--layout-scale, 1))) scale(0.97, 1.05) rotate(-3deg);
     }
     36% {
       transform: translateY(0) scale(1.04, 0.95) rotate(0deg);
     }
     52% {
-      transform: translateY(-4px) scale(0.99, 1.02) rotate(2deg);
+      transform: translateY(calc(-4px * var(--layout-scale, 1))) scale(0.99, 1.02) rotate(2deg);
     }
   }
 
   .mini-card {
     position: absolute;
-    width: 18px;
-    height: 25px;
-    border-radius: 3px;
+    width: calc(18px * var(--layout-scale, 1));
+    height: calc(25px * var(--layout-scale, 1));
+    border-radius: calc(3px * var(--layout-scale, 1));
     background: var(--card-face-bg);
     border: 1px solid var(--card-face-border);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
@@ -422,13 +422,13 @@
   }
 
   .mini-c2 {
-    top: 1.5px;
-    left: 2px;
+    top: calc(1.5px * var(--layout-scale, 1));
+    left: calc(2px * var(--layout-scale, 1));
   }
 
   .mini-c3 {
-    top: 3px;
-    left: 4px;
+    top: calc(3px * var(--layout-scale, 1));
+    left: calc(4px * var(--layout-scale, 1));
   }
 
   .mini-stack.is-seven .mini-card {
@@ -438,7 +438,7 @@
 
   .mini-num {
     font-family: var(--font-card);
-    font-size: 0.74rem;
+    font-size: calc(0.74rem * var(--layout-scale, 1));
     font-weight: 600;
     line-height: 1;
     letter-spacing: -0.02em;
@@ -456,18 +456,18 @@
   }
 
   .stage-bot {
-    --card-max-w: 36px;
-    --wide-gap-px: 8px;
-    --tight-gap-px: 4px;
-    min-height: 54px;
-    padding-inline: 88px;
+    --card-max-w: calc(36px * var(--layout-scale, 1));
+    --wide-gap-px: calc(8px * var(--layout-scale, 1));
+    --tight-gap-px: calc(4px * var(--layout-scale, 1));
+    min-height: calc(54px * var(--layout-scale, 1));
+    padding-inline: calc(88px * var(--layout-scale, 1));
   }
 
   .stage-human {
-    --card-max-w: 44px;
-    --wide-gap-px: 10px;
-    --tight-gap-px: 4px;
-    min-height: 66px;
+    --card-max-w: calc(44px * var(--layout-scale, 1));
+    --wide-gap-px: calc(10px * var(--layout-scale, 1));
+    --tight-gap-px: calc(4px * var(--layout-scale, 1));
+    min-height: calc(66px * var(--layout-scale, 1));
   }
 
   .empty-hand {

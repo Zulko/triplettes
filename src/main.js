@@ -10,8 +10,11 @@ import '@fontsource/archivo-narrow/latin-ext-600.css';
 import '@fontsource/archivo-narrow/latin-ext-700.css';
 import '@fontsource/oswald/latin-600.css';
 import { mount } from 'svelte';
+import { initPwaInstallCapture } from './lib/pwaInstall.js';
 import './app.css';
 import App from './App.svelte';
+
+initPwaInstallCapture();
 
 const app = mount(App, {
   target: document.getElementById('app'),

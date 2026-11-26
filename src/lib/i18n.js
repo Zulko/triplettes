@@ -86,6 +86,73 @@ export const STRINGS = {
     rulesCredit:
       'This game is a player-vs-computer implementation of the Kaya Miyano game commercialized as trio, Nano, or Slotters.',
     rulesCloseAria: 'Fermer les règles',
+    installAppBtn: 'Installer comme application',
+    installAppTitle: 'Installer Triplettes comme application',
+    installAppHelpTitle: 'Comment installer Triplettes comme application',
+    installGotIt: 'Compris',
+    installCloseAria: 'Fermer',
+    install: {
+      ios: {
+        title: 'Installer sur iPhone',
+        steps: [
+          'Touchez le bouton Partager dans Safari (le carré avec une flèche).',
+          'Faites défiler et touchez « Sur l’écran d’accueil ».',
+          'Touchez « Ajouter » pour installer Triplettes.',
+        ],
+        note: 'Ouvrez ce site dans Safari si vous utilisez un autre navigateur : sur iOS, seul Safari peut l’installer sur l’écran d’accueil.',
+      },
+      ipados: {
+        title: 'Installer sur iPad',
+        steps: [
+          'Touchez le bouton Partager dans Safari.',
+          'Touchez « Sur l’écran d’accueil ».',
+          'Touchez « Ajouter » pour installer Triplettes.',
+        ],
+        note: 'Utilisez Safari pour installer l’application sur l’iPad.',
+      },
+      'macos-safari': {
+        title: 'Installer sur Mac',
+        steps: [
+          'Dans Safari, ouvrez le menu Fichier (ou le menu Partager).',
+          'Choisissez « Ajouter au Dock ».',
+          'Triplettes s’ouvrira comme une application depuis le Dock.',
+        ],
+        note: 'Nécessite une version récente de macOS et de Safari.',
+      },
+      safari: {
+        title: 'Installer depuis Safari',
+        steps: [
+          'Ouvrez le menu Partager.',
+          'Choisissez « Sur l’écran d’accueil » ou « Ajouter au Dock ».',
+          'Confirmez pour installer Triplettes.',
+        ],
+      },
+      firefox: {
+        title: 'Installer depuis Firefox',
+        steps: [
+          'Ouvrez le menu de la page (⋯) dans la barre d’adresse.',
+          'Cherchez « Installer » ou « Ajouter l’application à l’écran d’accueil ».',
+          'Si l’option n’apparaît pas, essayez Chrome ou Edge pour une installation en un clic.',
+        ],
+      },
+      chromium: {
+        title: 'Installer l’application',
+        steps: [
+          'Ouvrez le menu du navigateur (⋮) près de la barre d’adresse.',
+          'Choisissez « Installer l’application » ou « Installer Triplettes ».',
+          'Confirmez l’installation.',
+        ],
+        note: 'Vous pouvez aussi utiliser l’icône d’installation dans la barre d’adresse lorsqu’elle apparaît.',
+      },
+      other: {
+        title: 'Installer l’application',
+        steps: [
+          'Ouvrez le menu du navigateur près de la barre d’adresse.',
+          'Cherchez « Installer l’application », « Sur l’écran d’accueil » ou « Ajouter au Dock ».',
+          'Confirmez pour installer Triplettes.',
+        ],
+      },
+    },
     rules: {
       goalHeading: 'But du jeu',
       goalBefore: 'Soyez le premier joueur à réunir ',
@@ -171,6 +238,73 @@ export const STRINGS = {
     rulesCredit:
       'This game is a player-vs-computer implementation of the Kaya Miyano game commercialized as trio, Nano, or Slotters.',
     rulesCloseAria: 'Close rules',
+    installAppBtn: 'Install as app',
+    installAppTitle: 'Install Triplettes as an app',
+    installAppHelpTitle: 'How to install Triplettes as an app',
+    installGotIt: 'Got it',
+    installCloseAria: 'Close',
+    install: {
+      ios: {
+        title: 'Install on iPhone',
+        steps: [
+          'Tap the Share button in Safari (square with an arrow).',
+          'Scroll and tap “Add to Home Screen”.',
+          'Tap “Add” to install Triplettes.',
+        ],
+        note: 'Open this site in Safari if you are using another browser — iOS only allows home-screen installs from Safari.',
+      },
+      ipados: {
+        title: 'Install on iPad',
+        steps: [
+          'Tap the Share button in Safari.',
+          'Tap “Add to Home Screen”.',
+          'Tap “Add” to install Triplettes.',
+        ],
+        note: 'Use Safari for home-screen installs on iPadOS.',
+      },
+      'macos-safari': {
+        title: 'Install on Mac',
+        steps: [
+          'In Safari, open the File menu (or the Share menu).',
+          'Choose “Add to Dock”.',
+          'Triplettes will open as its own app from the Dock.',
+        ],
+        note: 'Requires a recent macOS and Safari.',
+      },
+      safari: {
+        title: 'Install from Safari',
+        steps: [
+          'Open the Share menu.',
+          'Choose “Add to Home Screen” or “Add to Dock”.',
+          'Confirm to install Triplettes.',
+        ],
+      },
+      firefox: {
+        title: 'Install from Firefox',
+        steps: [
+          'Open the page menu (⋯) in the address bar.',
+          'Look for “Install” or “Add app to Home screen”.',
+          'If you do not see it, try Chrome or Edge on this device for one-click install.',
+        ],
+      },
+      chromium: {
+        title: 'Install app',
+        steps: [
+          'Open the browser menu (⋮) near the address bar.',
+          'Choose “Install app” or “Install Triplettes”.',
+          'Confirm the install prompt.',
+        ],
+        note: 'You can also use the install icon in the address bar when it appears.',
+      },
+      other: {
+        title: 'Install app',
+        steps: [
+          'Open your browser’s menu near the address bar.',
+          'Look for “Install app”, “Add to Home Screen”, or “Add to Dock”.',
+          'Confirm to install Triplettes.',
+        ],
+      },
+    },
     rules: {
       goalHeading: 'Objective',
       goalBefore: 'Be the first player to collect ',

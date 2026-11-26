@@ -1,5 +1,6 @@
 <script>
   import { onMount, tick } from 'svelte';
+  import InstallAppModal from './lib/components/InstallAppModal.svelte';
   import NewGameModal from './lib/components/NewGameModal.svelte';
   import PlayingCard from './lib/components/PlayingCard.svelte';
   import PlayerHand from './lib/components/PlayerHand.svelte';
@@ -25,6 +26,12 @@
     getPlayerName,
     pickBotNames,
   } from './lib/i18n.js';
+  import {
+    hasNativeInstallPrompt,
+    isRunningAsInstalledApp,
+    promptNativeInstall,
+    subscribeInstallPrompt,
+  } from './lib/pwaInstall.js';
 
   const HUMAN_SEAT = 0;
   const AI_START_DELAY_MS = 380;
@@ -56,6 +63,10 @@
 
   let rulesOpen = $state(false);
   let rulesTriggerEl = $state(null);
+  let installHelpOpen = $state(false);
+  let installTriggerEl = $state(null);
+  let appInstalled = $state(typeof window !== 'undefined' && isRunningAsInstalledApp());
+  let canInstallNatively = $state(typeof window !== 'undefined' && hasNativeInstallPrompt());
   let menuOpen = $state(false);
   let menuTriggerEl = $state(null);
   let newGameOpen = $state(false);
@@ -702,6 +713,21 @@
     }
   }
 
+  async function handleInstallApp() {
+    const trigger = menuTriggerEl;
+    menuOpen = false;
+    const prompted = await promptNativeInstall();
+    if (prompted) {
+      window.setTimeout(() => {
+        appInstalled = isRunningAsInstalledApp();
+      }, 400);
+      trigger?.focus();
+      return;
+    }
+    installTriggerEl = trigger;
+    installHelpOpen = true;
+  }
+
   onMount(() => {
     lang = detectInitialLang();
     document.documentElement.lang = lang;
@@ -728,7 +754,23 @@
       }
     } catch {}
     startNewGame(numPlayers, difficultyId);
+    appInstalled = isRunningAsInstalledApp();
+    const stopInstallPrompt = subscribeInstallPrompt((available) => {
+      canInstallNatively = available;
+      if (!available && isRunningAsInstalledApp()) appInstalled = true;
+    });
+    const displayModeQueries = [
+      window.matchMedia('(display-mode: standalone)'),
+      window.matchMedia('(display-mode: fullscreen)'),
+      window.matchMedia('(display-mode: minimal-ui)'),
+    ];
+    const onDisplayModeChange = () => {
+      appInstalled = isRunningAsInstalledApp();
+    };
+    displayModeQueries.forEach((mq) => mq.addEventListener('change', onDisplayModeChange));
     return () => {
+      stopInstallPrompt();
+      displayModeQueries.forEach((mq) => mq.removeEventListener('change', onDisplayModeChange));
       thinkToken += 1;
       aiPlan = null;
       clearPendingTimer();
@@ -846,6 +888,18 @@
             >
               {s.rulesBtn}
             </button>
+
+            {#if !appInstalled}
+              <button
+                type="button"
+                class="menu-action menu-action-btn"
+                role="menuitem"
+                title={canInstallNatively ? s.installAppTitle : s.installAppHelpTitle}
+                onclick={handleInstallApp}
+              >
+                {s.installAppBtn}
+              </button>
+            {/if}
 
             <button
               type="button"
@@ -1031,6 +1085,13 @@
   {lang}
   onClose={() => (rulesOpen = false)}
   returnFocusTo={rulesTriggerEl}
+/>
+
+<InstallAppModal
+  open={installHelpOpen}
+  {lang}
+  onClose={() => (installHelpOpen = false)}
+  returnFocusTo={installTriggerEl}
 />
 
 <NewGameModal
